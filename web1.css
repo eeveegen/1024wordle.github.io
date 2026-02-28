@@ -2,3 +2,7 @@ body, h1, h2, p, u1, li {
     nargin: 0;
     padding: 0;
   }
+
+.inline-block-child {
+  display: inline-block;
+}
