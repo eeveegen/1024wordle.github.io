@@ -6,24 +6,16 @@
     </head>
     <body>
         <h1 style="font-size: 45px; font-family: 'Times New Roman', serif;">Starting Page</h1>
-        <div class='parent' id="textbox">
-            <div class='child inline-block-child'>
-                <input type="text" oninput="testingfunc(this)">
-            </div>
-            <div class='child inline-block-child'>
-                <input type="text" id="debug-field">
-            </div>
-            <div class='child inline-block-child'>
-                <input type="text">
-            </div>
-            <div class='child inline-block-child'>
-                <input type="text">
-            </div>
-            <div class='child inline-block-child'>
-                <input type="text">
-            </div>
+        <div class="textfields">
+            <input id="field1" class="letterbox" type="text">
+            <input id="field2" class="letterbox" type="text">
+            <input id="field3" class="letterbox" type="text">
+            <input id="field4" class="letterbox" type="text">
+            <input id="field5" class="letterbox" type="text">
+            <!-- Event listeners initialisation -->
+            <script>
+                attach_event_listeners();
+            </script>
         </div>
-        <!-- <input type="text" onkeydown="enter(this)"> -->
-        <p>not pressed</p>
     </body>
 </html>

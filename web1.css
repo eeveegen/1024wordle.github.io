@@ -3,6 +3,10 @@ body, h1, h2, p, u1, li {
     padding: 0;
   }
 
-.inline-block-child {
+/* .inline-block-child {
   display: inline-block;
+} */
+
+input.letterbox {
+  max-width: 20px;
 }
