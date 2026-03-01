@@ -41,6 +41,13 @@ function attach_event_listeners() {
                         textinpdiv.children[i].value = val + " "; // to neutralise delete
                     }
                 // case: another key -> move forward!
+                } else if (event.keyCode == 13) {
+                    word = "";
+                    for (i=0; i<textinpdiv.children.length-1; i++) {
+                        word = word + textinpdiv.children[i].value;
+                    }
+                    debugel = document.getElementById("debugfield");
+                    debugel.innerHTML = word;
                 } else {
                     // "wait" time so that input is processed
                     setTimeout(() => {refocus(this)}, 0);
