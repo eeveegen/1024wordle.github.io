@@ -24,31 +24,44 @@ function attach_event_listeners() {
 
                 // find element index in word
                 for (i=0; i<textinpdiv.children.length; i++) {
+                    textinpdiv.children[i].style.color = "black";
                     if (textinpdiv.children[i].isEqualNode(this)) {
-                        break;
+                        let idx = i;
                     }
                 }
                 
                 // case: delete -> go back
                 if (event.keyCode == 8) { 
                     if (!this.value) {
-                        if (i>0) {
-                        i = i-1;
+                        if (idx>0) {
+                        idx = idx-1;
                         }
 
-                        val = textinpdiv.children[i].value;
-                        textinpdiv.children[i].focus();
-                        textinpdiv.children[i].value = val + " "; // to neutralise delete
+                        val = textinpdiv.children[idx].value;
+                        textinpdiv.children[idx].focus();
+                        textinpdiv.children[idx].value = val + " "; // to neutralise delete
                     }
-                // case: another key -> move forward!
+                // case: enter
                 } else if (event.keyCode == 13) {
                     word = "";
                     for (i=0; i<textinpdiv.children.length-1; i++) {
                         word = word + textinpdiv.children[i].value;
                     }
-                    debugel = document.getElementById("debugfield");
-                    debugel.innerHTML = word;
-                } else {
+                    //debugel = document.getElementById("debugfield");
+
+                    fetch("valid-wordle-solutions.txt")
+                        .then((res) => res.text())
+                        .then((text) => text.split("\r\n"))
+                        .then((text) => {
+                            valid = text.includes(word);
+                            if (!valid) {
+                                for (i=0; i<textinpdiv.children.length; i++) {
+                                    textinpdiv.children[i].style.color = "red";
+                                }
+                            }
+                        })
+                // case: another key -> move forward!
+                } else { 
                     // "wait" time so that input is processed
                     setTimeout(() => {refocus(this)}, 0);
                 }
