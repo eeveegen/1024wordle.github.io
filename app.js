@@ -1,5 +1,7 @@
+var active_field = 0;
+
 function start() {
-    window.location.href = 'start.html';
+    window.location.href = './start.html';
     return false;    
 }
 
@@ -8,6 +10,77 @@ function start() {
 //         document.getElementById('debug-field').innerHTML = "Pressed!";
 //     }
 // }
+
+function refocus_test(elem) {
+    prev_elem = get_previous(elem);
+    prev_elem.value = "h";
+}
+
+function get_previous(elem) {
+    parent = elem.parentElement;
+    for (i=0; i<parent.children.length; i++) {
+        if (parent.children[i].isEqualNode(elem)) {
+            if (i != 0) {
+                i = i-1;
+            }
+            return parent.children[i];
+        }
+    }
+}
+
+function get_next(elem) {
+    parent = elem.parentElement;
+    for (i=0; i<parent.children.length; i++) {
+        if (parent.children[i].isEqualNode(elem)) {
+            if (i != parent.children.length-1) {
+                i = i+1;
+            }
+            return parent.children[i];
+        }
+    }
+}
+
+function recolor(word, color) {
+    for (i=0; i<word.children.length; i++) {
+        word.children[i].style.color = color;
+    }
+}
+
+function handle_delete(letter) {
+    if (!letter.value) {
+        prev_letter = get_previous(letter);
+        prev_letter.focus();
+    }
+}
+
+function handle_enter(word) {
+    uinput = "";
+    for (i=0; i<word.children.length; i++) {
+        uinput = uinput + word.children[i].value;
+    }
+
+    fetch("./valid-wordle-solutions.txt")
+        .then((res) => res.text())
+        .then((text) => text.split("\r\n"))
+        .then((text) => {
+            valid = text.includes(uinput);
+            if (!valid) {
+                recolor(word, "red");
+            }
+        })
+}
+
+function handle_input(letter) {
+    // overwrite so that field contains only 1 letter;
+    if (letter.value.length > 0) {
+        letter.value = letter.value[letter.value.length-1];
+    } else {
+        letter.value = "";
+    }
+
+    next_letter = get_next(letter);
+    next_letter.focus();
+}
 
 function attach_event_listeners() {
     // get all applicable
@@ -20,77 +93,19 @@ function attach_event_listeners() {
             elem = textinpdivs[j].children[i];
 
             elem.addEventListener('keydown', function(event) {
-                textinpdiv = this.parentElement;
+                recolor(this.parentElement, "black");
 
-                // find element index in word
-                for (i=0; i<textinpdiv.children.length; i++) {
-                    textinpdiv.children[i].style.color = "black";
-                    if (textinpdiv.children[i].isEqualNode(this)) {
-                        let idx = i;
-                    }
-                }
-                
-                // case: delete -> go back
                 if (event.keyCode == 8) { 
-                    if (!this.value) {
-                        if (idx>0) {
-                        idx = idx-1;
-                        }
-
-                        val = textinpdiv.children[idx].value;
-                        textinpdiv.children[idx].focus();
-                        textinpdiv.children[idx].value = val + " "; // to neutralise delete
-                    }
-                // case: enter
+                    handle_delete(this);
                 } else if (event.keyCode == 13) {
-                    word = "";
-                    for (i=0; i<textinpdiv.children.length-1; i++) {
-                        word = word + textinpdiv.children[i].value;
-                    }
-                    //debugel = document.getElementById("debugfield");
-
-                    fetch("valid-wordle-solutions.txt")
-                        .then((res) => res.text())
-                        .then((text) => text.split("\r\n"))
-                        .then((text) => {
-                            valid = text.includes(word);
-                            if (!valid) {
-                                for (i=0; i<textinpdiv.children.length; i++) {
-                                    textinpdiv.children[i].style.color = "red";
-                                }
-                            }
-                        })
-                // case: another key -> move forward!
+                    handle_enter(this.parentElement);
                 } else { 
                     // "wait" time so that input is processed
-                    setTimeout(() => {refocus(this)}, 0);
+                    setTimeout(() => {handle_input(this)}, 0);
                 }
             });
         }
     }
 }
 
-function refocus(elem) {
 
-    // overwrite so that field contains only 1 letter;
-    if (elem.value.length > 0) {
-        elem.value = elem.value[elem.value.length-1];
-    } else {
-        elem.value = "";
-    }
-
-    // get next element in the box and focus on it
-    textinpdiv = elem.parentElement;
-
-    for (i=0; i<textinpdiv.children.length; i++) {
-        if ((textinpdiv.children[i]).isEqualNode(elem)) {
-            idx = i;
-            break;
-        }
-    }
-
-    if (i<textinpdiv.children.length-1) {
-       i = i+1;
-    }
-    textinpdiv.children[i].focus();
-}
