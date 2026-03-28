@@ -101,7 +101,7 @@ async function handle_enter(word) {
                 // debugel.innerHTML = solution;
             } else {
                 next_word = get_next(word);
-                next_word.children[0].focus();
+                setTimeout(() => {next_word.children[0].focus()}, 0);
             }
         } else {
             window.location.href = './success.html';
