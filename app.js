@@ -1,43 +1,49 @@
 var active_field = 0;
+var solution;
+fetch("./valid-wordle-solutions.txt")
+        .then((res) => res.text())
+        .then((text) => text.split("\r\n"))
+        .then((text) => {
+            idx = Math.floor(Math.random() * text.length);
+            solution = text[idx];
+        })
+
+// mummy -> 3
+// comma -> 2
+// solution = "annoy";
+// solution = "nanny";
 
 function start() {
     window.location.href = './start.html';
     return false;    
 }
 
-// function enter(ele) {
-//     if(event.key === 'Enter') {
-//         document.getElementById('debug-field').innerHTML = "Pressed!";
-//     }
-// }
+function get_idx(elem) {
+    parent = elem.parentElement;
 
-function refocus_test(elem) {
-    prev_elem = get_previous(elem);
-    prev_elem.value = "h";
+    for (i=0; i<parent.children.length; i++) {
+        if (parent.children[i].isSameNode(elem)) {
+            return i;
+        }
+    }
 }
 
 function get_previous(elem) {
     parent = elem.parentElement;
-    for (i=0; i<parent.children.length; i++) {
-        if (parent.children[i].isEqualNode(elem)) {
-            if (i != 0) {
-                i = i-1;
-            }
-            return parent.children[i];
-        }
+    idx = get_idx(elem);
+    if (idx != 0) {
+        idx = idx-1;
     }
+    return parent.children[idx];
 }
 
 function get_next(elem) {
     parent = elem.parentElement;
-    for (i=0; i<parent.children.length; i++) {
-        if (parent.children[i].isEqualNode(elem)) {
-            if (i != parent.children.length-1) {
-                i = i+1;
-            }
-            return parent.children[i];
-        }
+    idx = get_idx(elem);
+    if (idx != parent.children.length-1) {
+        idx = idx+1;
     }
+    return parent.children[idx];
 }
 
 function recolor(word, color) {
@@ -53,21 +59,105 @@ function handle_delete(letter) {
     }
 }
 
-function handle_enter(word) {
+function get_uinput(word) {
     uinput = "";
     for (i=0; i<word.children.length; i++) {
         uinput = uinput + word.children[i].value;
     }
+    // debugel = document.getElementById("debugfield");
+    // debugel.innerHTML = uinput + " " + uinput.length.toString() + ", field length: " + word.children.length.toString();
 
-    fetch("./valid-wordle-solutions.txt")
-        .then((res) => res.text())
-        .then((text) => text.split("\r\n"))
-        .then((text) => {
-            valid = text.includes(uinput);
-            if (!valid) {
-                recolor(word, "red");
+    return uinput.toLowerCase();
+}
+
+async function word_valid(uinput) {
+    res = await fetch("./valid-wordle-words.txt");
+    text = await res.text();
+    text = text.split("\n");
+    valid = text.includes(uinput);
+
+    return valid;
+}
+
+async function handle_enter(word) {
+    uinput = get_uinput(word);
+    valid = await word_valid(uinput);
+
+    // debugel = document.getElementById("debugfield");
+
+    if (!valid) {
+        recolor(word, "red");
+    } else {
+        color_guess(word, uinput);
+
+        if (uinput != solution) {
+            active_field++;
+
+            if (active_field >= word.parentElement.children.length-1) {
+                document.activeElement.blur();
+                sessionStorage.setItem("solution", solution);
+                window.location.href = './fail.html';
+                // debugel = document.getElementById("debugfield1");
+                // debugel.innerHTML = solution;
+            } else {
+                next_word = get_next(word);
+                next_word.children[0].focus();
             }
-        })
+        } else {
+            window.location.href = './success.html';
+            return false;
+        }   
+    }
+}
+
+// function map_letters(solution, uinput) {
+//     let map = "nnnnn";
+//     var i;
+
+//     for (i=0; i<uinput.length; i++) {
+//         if (uinput[i] == solution[i]) {
+//             map[i] = "g";
+//             console.log("ho");
+//         }
+//     }
+    
+//     return map;
+// }
+
+// function count(solution, letter) {
+//     var count = 0;
+//     for (i=0; i<solution.length; i++) {
+//         if (solution[i] == letter) {
+//             count++;
+//         }
+//     }
+//     return count;
+// }
+
+function color_guess(word, uinput) {
+    // step 1: color all greens
+    for (i=0; i<solution.length; i++) {
+        if (uinput[i] == solution[i]) {
+            word.children[i].style.backgroundColor = "green";
+        }
+    }
+
+    // step 2: iterate again
+    for (i=0; i<solution.length; i++) {
+        // do stuff only for fields not alr processed in last step (= green)
+        if (word.children[i].style.backgroundColor != "green") {
+            // unprocessed tile -> iterate over uinput
+            for (j=0; j<uinput.length; j++) {
+                if (uinput[j] == solution[i]) {
+                    // find first "free" tile with the same letter and color that one
+                    if (word.children[j].style.backgroundColor != "green" && word.children[j].style.backgroundColor != "yellow") {
+                        word.children[j].style.backgroundColor = "yellow";
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function handle_input(letter) {
@@ -104,8 +194,17 @@ function attach_event_listeners() {
                     setTimeout(() => {handle_input(this)}, 0);
                 }
             });
+
+            elem.addEventListener('mousedown', function(event) {
+                if (!active(this.parentElement)) {
+                    event.preventDefault();
+                }
+            });
         }
     }
 }
 
-
+function active(word) {
+    wordidx = get_idx(word);
+    return (wordidx == active_field);
+}

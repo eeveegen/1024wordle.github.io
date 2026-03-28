@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="web.css">
+        <script src="./app.js"></script>
+    </head>
+    <body>
+        <h1>You lose!</h1>
+        <p align="center" id="ansfield">The solution was: </p>
+        <script>
+            ansfield = document.getElementById("ansfield");
+            solution = sessionStorage.getItem("solution");
+            ansfield.innerHTML = ansfield.innerHTML + solution;
+        </script>
+    </body>
+</html>
