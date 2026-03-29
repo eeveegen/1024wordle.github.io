@@ -2,13 +2,16 @@ var active_field = 0;
 var solution;
 fetch("./valid-wordle-solutions.txt")
         .then((res) => res.text())
-        .then((text) => text.split("\r\n"))
+        .then((text) => text.trim())
+        // .then((text) => text.split("\r\n"))
         .then((text) => {
+            text = text.replace("\r", "");
+            text = text.split("\n")
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
 
-            // debugel = document.getElementById("debugfield");
-            // debugel.innerHTML = "Text length: " + text.length;
+            debugel = document.getElementById("debugfield");
+            debugel.innerHTML = "Text length: " + text.length;
         })
 
 // mummy -> 3
@@ -76,11 +79,14 @@ function get_uinput(word) {
 async function debug_solution() {
     res = await fetch("./valid-wordle-solutions.txt");
     text = await res.text();
+    text = text.trim();
     console.log("Text length after fetch: " + text.length.toString());
-    console.log("Fifth+ characters: " + text[5] + text[6] + text[7] + text[8]);
-    console.log("Fifth character: " + text[5]);
+    // console.log("Fifth+ characters: " + text[5] + text[6] + text[7] + text[8]);
+    // console.log("Fifth character: " + text[5]);
+    text = text.replace("\r", "");
     text = text.split("\n");
     console.log("Text length after split: " + text.length.toString());
+    console.log("Word length: " + text[0].length);
 
 }
 
