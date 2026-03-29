@@ -3,15 +3,15 @@ var solution;
 fetch("./valid-wordle-solutions.txt")
         .then((res) => res.text())
         .then((text) => text.trim())
-        // .then((text) => text.split("\r\n"))
         .then((text) => {
             text = text.replace("\r", "");
-            text = text.split("\n")
+            text = text.split("\n");
+
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
 
             debugel = document.getElementById("debugfield");
-            debugel.innerHTML = "Text length: " + text.length;
+            debugel.innerHTML = "Solution: " + solution;
         })
 
 // mummy -> 3
@@ -76,19 +76,19 @@ function get_uinput(word) {
     return uinput.toLowerCase();
 }
 
-async function debug_solution() {
-    res = await fetch("./valid-wordle-solutions.txt");
-    text = await res.text();
-    text = text.trim();
-    console.log("Text length after fetch: " + text.length.toString());
-    // console.log("Fifth+ characters: " + text[5] + text[6] + text[7] + text[8]);
-    // console.log("Fifth character: " + text[5]);
-    text = text.replace("\r", "");
-    text = text.split("\n");
-    console.log("Text length after split: " + text.length.toString());
-    console.log("Word length: " + text[0].length);
+// async function debug_solution() {
+//     res = await fetch("./valid-wordle-solutions.txt");
+//     text = await res.text();
+//     text = text.trim();
+//     console.log("Text length after fetch: " + text.length.toString());
+//     // console.log("Fifth+ characters: " + text[5] + text[6] + text[7] + text[8]);
+//     // console.log("Fifth character: " + text[5]);
+//     text = text.replace("\r", "");
+//     text = text.split("\n");
+//     console.log("Text length after split: " + text.length.toString());
+//     console.log("Word length: " + text[0].length);
 
-}
+// }
 
 async function word_valid(uinput) {
     res = await fetch("./valid-wordle-words.txt");
@@ -103,11 +103,11 @@ async function handle_enter(word) {
     uinput = get_uinput(word);
     // valid = await word_valid(uinput);
 
-    debugel = document.getElementById("debugfield");
-    debugel.innerHTML = "Solution length: " + solution.length + ", input: " + uinput;
-
     next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
     setTimeout(() => {next_word.children[0].focus();}, 0);
+
+    debugel = document.getElementById("debugfield");
+    debugel.innerHTML = "Solution: " + solution + ", input: " + uinput;
 }
 
 function color_guess(word, uinput) {
@@ -180,8 +180,8 @@ function attach_event_listeners() {
                 } else if (event.keyCode == 13) {
                     event.preventDefault(); // prevents letter overwrite
                     // this.style.backgroundColor = "orange";
-                    // handle_enter(this.parentElement);
-                    debug_solution();
+                    handle_enter(this.parentElement);
+                    // debug_solution();
                 }
             });
         }
