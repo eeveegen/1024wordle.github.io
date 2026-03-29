@@ -84,9 +84,13 @@ async function word_valid(uinput) {
 
 async function handle_enter(word) {
     uinput = get_uinput(word);
+    // valid = await word_valid(uinput);
 
     debugel = document.getElementById("debugfield");
-    debugel.innerHTML = uinput;
+    debugel.innerHTML = "Solution: " + solution + ", input: " + uinput;
+
+    next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
+    setTimeout(() => {next_word.children[0].focus();}, 0);
 }
 
 function color_guess(word, uinput) {
@@ -131,6 +135,10 @@ function handle_input(letter) {
 }
 
 function attach_event_listeners() {
+    // debug:
+    // debugel = document.getElementById("debugfield");
+    // debugel.innerHTML = "Solution: " + solution;
+
     // get all applicable
     textinpdivs = document.getElementsByClassName("textfields");
 
