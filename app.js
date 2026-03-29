@@ -32,6 +32,7 @@ function get_idx(elem) {
 }
 
 function get_previous(elem) {
+    // returns same element if it's the first one
     parent = elem.parentElement;
     idx = get_idx(elem);
     if (idx != 0) {
@@ -41,6 +42,7 @@ function get_previous(elem) {
 }
 
 function get_next(elem) {
+    // returns the same element if it's the last one
     parent = elem.parentElement;
     idx = get_idx(elem);
     if (idx != parent.children.length-1) {
@@ -138,6 +140,9 @@ function color_guess(word, uinput) {
 }
 
 function handle_input(letter) {
+    // note: handle_input has a problem with the last letter - it writes a second letter there instead of doing what it is supposed to do;
+    // last letter of each word has length 2 for whatever reason
+
     // overwrite so that field contains only 1 letter;
     if (letter.value.length > 0) {
         letter.value = letter.value[letter.value.length-1];
@@ -159,8 +164,19 @@ function attach_event_listeners() {
         for (i=0; i<textinpdivs[j].children.length; i++) {
             elem = textinpdivs[j].children[i];
 
+            elem.addEventListener('beforeinput', function(event) {
+                this.value = "";
+            });
+
+            elem.addEventListener('input', function(event) {
+                next_elem = get_next(this);
+                next_elem.focus();
+            });
+
             elem.addEventListener('keydown', function(event) {
-                this.style.backgroundColor = "red";
+                if (event.keyCode == 8) { 
+                    handle_delete(this);
+                }
             });
         }
     }
