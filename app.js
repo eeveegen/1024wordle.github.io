@@ -8,7 +8,7 @@ fetch("./valid-wordle-solutions.txt")
             solution = text[idx];
 
             debugel = document.getElementById("debugfield");
-            debugel.innerHTML = "Solution: " + solution;
+            debugel.innerHTML = "Text length: " + text.length;
         })
 
 // mummy -> 3
@@ -87,7 +87,7 @@ async function handle_enter(word) {
     // valid = await word_valid(uinput);
 
     debugel = document.getElementById("debugfield");
-    debugel.innerHTML = "Solution: " + solution + ", input: " + uinput;
+    debugel.innerHTML = "Solution length: " + solution.length + ", input: " + uinput;
 
     next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
     setTimeout(() => {next_word.children[0].focus();}, 0);
