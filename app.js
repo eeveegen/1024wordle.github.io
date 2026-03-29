@@ -93,7 +93,11 @@ async function handle_enter(word) {
     setTimeout(() => {next_word.children[0].focus();}, 0);
 
     debugel = document.getElementById("debugfield");
-    debugel.innerHTML = "Solution: " + solution + ", input: " + uinput;
+    debugel.innerHTML = "Solution: " + solution + ", input: " + uinput + ", word valid: " + valid;
+
+    if (!valid) {
+        recolor(word, "red");
+    }
 }
 
 function color_guess(word, uinput) {
