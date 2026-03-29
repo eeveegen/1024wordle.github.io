@@ -55,7 +55,7 @@ function recolor(word, color) {
 function handle_delete(letter) {
     if (!letter.value) {
         prev_letter = get_previous(letter);
-        prev_letter.focus();
+        setTimeout(() => {prev_letter.focus();});
     }
 }
 
@@ -101,7 +101,7 @@ async function handle_enter(word) {
                 // debugel.innerHTML = solution;
             } else {
                 next_word = get_next(word);
-                setTimeout(() => {next_word.children[0].focus()}, 0);
+                setTimeout(() => {next_word.children[0].focus();}, 0);
             }
         } else {
             window.location.href = './success.html';
@@ -169,7 +169,7 @@ function handle_input(letter) {
     }
 
     next_letter = get_next(letter);
-    next_letter.focus();
+    setTimeout(() => {next_letter.focus();});
 }
 
 function attach_event_listeners() {
