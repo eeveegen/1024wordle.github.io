@@ -2,8 +2,10 @@ var active_field = 0;
 var solution;
 fetch("./valid-wordle-solutions.txt")
         .then((res) => res.text())
-        .then((text) => text.split("\r\n"))
+        .then((text) => text.trim())
         .then((text) => {
+            text = text.replace(/\r/g, "");
+            text = text.split("\n");
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
         })
@@ -182,16 +184,26 @@ function attach_event_listeners() {
         for (i=0; i<textinpdivs[j].children.length; i++) {
             elem = textinpdivs[j].children[i];
 
+            elem.addEventListener('beforeinput', function(event) {
+                this.value = "";
+            });
+
+            elem.addEventListener('input', function(event) {
+                next_elem = get_next(this);
+                next_elem.focus();
+            })
+
             elem.addEventListener('keydown', function(event) {
                 recolor(this.parentElement, "black");
 
                 if (event.keyCode == 8) { 
                     handle_delete(this);
                 } else if (event.keyCode == 13) {
+                    event.preventDefault(); // prevents letter overwrite
                     handle_enter(this.parentElement);
-                } else { 
-                    // "wait" time so that input is processed
-                    setTimeout(() => {handle_input(this)}, 0);
+                // } else { 
+                //     // "wait" time so that input is processed
+                //     setTimeout(() => {handle_input(this)}, 0);
                 }
             });
 
