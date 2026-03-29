@@ -157,7 +157,11 @@ function attach_event_listeners() {
     for (j=0; j<textinpdivs.length; j++) {
         // iterate over word letter fields
         for (i=0; i<textinpdivs[j].children.length; i++) {
-            textinpdivs[j].children[i].style.backgroundColor = "blue";
+            elem = textinpdivs[j].children[i];
+
+            elem.addEventListener('keydown', function(event) {
+                this.style.backgroundColor = "red";
+            });
         }
     }
 }
