@@ -77,7 +77,9 @@ async function debug_solution() {
     res = await fetch("./valid-wordle-solutions.txt");
     text = await res.text();
     console.log("Text length after fetch: " + text.length.toString());
-    text = text.split("\r\n");
+    console.log("Fifth+ characters: " + text[5] + text[6] + text[7] + text[8]);
+    console.log("Fifth character: " + text[5]);
+    text = text.split("\n");
     console.log("Text length after split: " + text.length.toString());
 
 }
