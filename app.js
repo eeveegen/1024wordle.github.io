@@ -4,14 +4,14 @@ fetch("./valid-wordle-solutions.txt")
         .then((res) => res.text())
         .then((text) => text.trim())
         .then((text) => {
-            text = text.replace("\r", "");
+            text = text.replace(/\r/g, "");
             text = text.split("\n");
 
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
 
             debugel = document.getElementById("debugfield");
-            debugel.innerHTML = "Solution: " + solution;
+            debugel.innerHTML = "Solution: " + solution + ", solution length: " + solution.length.toString();
         })
 
 // mummy -> 3
