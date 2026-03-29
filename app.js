@@ -7,8 +7,8 @@ fetch("./valid-wordle-solutions.txt")
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
 
-            debugel = document.getElementById("debugfield");
-            debugel.innerHTML = "Text length: " + text.length;
+            // debugel = document.getElementById("debugfield");
+            // debugel.innerHTML = "Text length: " + text.length;
         })
 
 // mummy -> 3
@@ -71,6 +71,15 @@ function get_uinput(word) {
     }
 
     return uinput.toLowerCase();
+}
+
+async function debug_solution() {
+    res = await fetch("./valid-wordle-solutions.txt");
+    text = await res.text();
+    console.log("Text length after fetch: " + text.length.toString());
+    text = text.split("\r\n");
+    console.log("Text length after split: " + text.length.toString());
+
 }
 
 async function word_valid(uinput) {
@@ -163,7 +172,8 @@ function attach_event_listeners() {
                 } else if (event.keyCode == 13) {
                     event.preventDefault(); // prevents letter overwrite
                     // this.style.backgroundColor = "orange";
-                    handle_enter(this.parentElement);
+                    // handle_enter(this.parentElement);
+                    debug_solution();
                 }
             });
         }
