@@ -8,7 +8,7 @@ fetch("./valid-wordle-solutions.txt")
             solution = text[idx];
 
             debugel = document.getElementById("debugfield");
-            debugel.innerHTML = solution;
+            debugel.innerHTML = "Solution: " + solution;
         })
 
 // mummy -> 3
