@@ -84,33 +84,9 @@ async function word_valid(uinput) {
 
 async function handle_enter(word) {
     uinput = get_uinput(word);
-    valid = await word_valid(uinput);
 
-    // debugel = document.getElementById("debugfield");
-
-    if (!valid) {
-        recolor(word, "red");
-    } else {
-        color_guess(word, uinput);
-
-        if (uinput != solution) {
-            active_field++;
-
-            if (active_field >= word.parentElement.children.length-1) {
-                document.activeElement.blur();
-                sessionStorage.setItem("solution", solution);
-                window.location.href = './fail.html';
-                // debugel = document.getElementById("debugfield1");
-                // debugel.innerHTML = solution;
-            } else {
-                next_word = get_next(word);
-                setTimeout(() => {next_word.children[0].focus();}, 0);
-            }
-        } else {
-            window.location.href = './success.html';
-            return false;
-        }   
-    }
+    debugel = document.getElementById("debugfield");
+    debugel.innerHTML = uinput;
 }
 
 function color_guess(word, uinput) {
@@ -176,6 +152,10 @@ function attach_event_listeners() {
             elem.addEventListener('keydown', function(event) {
                 if (event.keyCode == 8) { 
                     handle_delete(this);
+                } else if (event.keyCode == 13) {
+                    event.preventDefault(); // prevents letter overwrite
+                    // this.style.backgroundColor = "orange";
+                    handle_enter(this.parentElement);
                 }
             });
         }
