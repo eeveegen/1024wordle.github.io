@@ -6,6 +6,9 @@ fetch("./valid-wordle-solutions.txt")
         .then((text) => {
             idx = Math.floor(Math.random() * text.length);
             solution = text[idx];
+
+            debugel = document.getElementById("debugfield");
+            debugel.innerHTML = solution;
         })
 
 // mummy -> 3
@@ -64,8 +67,6 @@ function get_uinput(word) {
     for (i=0; i<word.children.length; i++) {
         uinput = uinput + word.children[i].value;
     }
-    // debugel = document.getElementById("debugfield");
-    // debugel.innerHTML = uinput + " " + uinput.length.toString() + ", field length: " + word.children.length.toString();
 
     return uinput.toLowerCase();
 }
@@ -109,30 +110,6 @@ async function handle_enter(word) {
         }   
     }
 }
-
-// function map_letters(solution, uinput) {
-//     let map = "nnnnn";
-//     var i;
-
-//     for (i=0; i<uinput.length; i++) {
-//         if (uinput[i] == solution[i]) {
-//             map[i] = "g";
-//             console.log("ho");
-//         }
-//     }
-    
-//     return map;
-// }
-
-// function count(solution, letter) {
-//     var count = 0;
-//     for (i=0; i<solution.length; i++) {
-//         if (solution[i] == letter) {
-//             count++;
-//         }
-//     }
-//     return count;
-// }
 
 function color_guess(word, uinput) {
     // step 1: color all greens
@@ -180,26 +157,7 @@ function attach_event_listeners() {
     for (j=0; j<textinpdivs.length; j++) {
         // iterate over word letter fields
         for (i=0; i<textinpdivs[j].children.length; i++) {
-            elem = textinpdivs[j].children[i];
-
-            elem.addEventListener('keydown', function(event) {
-                recolor(this.parentElement, "black");
-
-                if (event.keyCode == 8) { 
-                    handle_delete(this);
-                } else if (event.keyCode == 13) {
-                    handle_enter(this.parentElement);
-                } else { 
-                    // "wait" time so that input is processed
-                    setTimeout(() => {handle_input(this)}, 0);
-                }
-            });
-
-            elem.addEventListener('mousedown', function(event) {
-                if (!active(this.parentElement)) {
-                    event.preventDefault();
-                }
-            });
+            textinpdivs[j].children[i].style.backgroundColor = "blue";
         }
     }
 }
