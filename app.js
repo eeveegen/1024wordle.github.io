@@ -95,8 +95,13 @@ async function handle_enter(word) {
     if (!valid) {
         recolor(word, "red");
     } else {
-        next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
-        setTimeout(() => {next_word.children[0].focus();}, 0);
+        color_guess(word, uinput);
+
+        if (uinput != solution) {
+            active_field++;
+            next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
+            setTimeout(() => {next_word.children[0].focus();}, 0);
+        }
     }
 }
 
