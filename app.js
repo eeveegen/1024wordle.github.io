@@ -89,14 +89,14 @@ async function handle_enter(word) {
     uinput = get_uinput(word);
     valid = await word_valid(uinput);
 
-    next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
-    setTimeout(() => {next_word.children[0].focus();}, 0);
-
     debugel = document.getElementById("debugfield");
     debugel.innerHTML = "Solution: " + solution + ", input: " + uinput + ", word valid: " + valid;
 
     if (!valid) {
         recolor(word, "red");
+    } else {
+        next_word = get_next(word); // returs same word if it's the last one but we can tackle this one later
+        setTimeout(() => {next_word.children[0].focus();}, 0);
     }
 }
 
@@ -165,13 +165,13 @@ function attach_event_listeners() {
             });
 
             elem.addEventListener('keydown', function(event) {
+                recolor(this.parentElement, "black");
+
                 if (event.keyCode == 8) { 
                     handle_delete(this);
                 } else if (event.keyCode == 13) {
                     event.preventDefault(); // prevents letter overwrite
-                    // this.style.backgroundColor = "orange";
                     handle_enter(this.parentElement);
-                    // debug_solution();
                 }
             });
         }
