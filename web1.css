@@ -10,3 +10,15 @@ body, h1, h2, p, u1, li {
 input.letterbox {
   max-width: 20px;
 }
+
+.banner {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.alphabet {
+  display: inline-block;
+  font-family: arial;
+  font-size: 14;
+  font-weight: bold;
+}

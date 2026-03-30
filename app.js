@@ -30,6 +30,15 @@ function get_idx(elem) {
     }
 }
 
+// A = 65
+function get_letter(lval) { // given as a single char
+    alphabet = document.getElementById("banner");
+    // idx = (lval.toUpperCase()).charCodeAt();
+    idx = lval.toUpperCase().charCodeAt();
+    return alphabet.children[idx-65];
+
+}
+
 function get_previous(elem) {
     parent = elem.parentElement;
     idx = get_idx(elem);
@@ -91,6 +100,7 @@ async function handle_enter(word) {
         recolor(word, "red");
     } else {
         color_guess(word, uinput);
+        color_alphabet(word, uinput);
 
         if (uinput != solution) {
             active_field++;
@@ -111,30 +121,6 @@ async function handle_enter(word) {
         }   
     }
 }
-
-// function map_letters(solution, uinput) {
-//     let map = "nnnnn";
-//     var i;
-
-//     for (i=0; i<uinput.length; i++) {
-//         if (uinput[i] == solution[i]) {
-//             map[i] = "g";
-//             console.log("ho");
-//         }
-//     }
-    
-//     return map;
-// }
-
-// function count(solution, letter) {
-//     var count = 0;
-//     for (i=0; i<solution.length; i++) {
-//         if (solution[i] == letter) {
-//             count++;
-//         }
-//     }
-//     return count;
-// }
 
 function color_guess(word, uinput) {
     // step 1: color all greens
@@ -158,6 +144,25 @@ function color_guess(word, uinput) {
                     }
                 }
             }
+        }
+    }
+}
+
+function color_alphabet(word, uinput) {
+    for (i=0; i<uinput.length; i++) {
+        charel = get_letter(uinput[i]);
+
+        if (solution.includes(uinput[i])) { // yellow or green
+            if (charel.style.color != "green") { // if it's green: no touch it!
+                if (word.children[i].style.backgroundColor == "green") { // else: update
+                    // if we found correct letter position: update it!
+                    charel.style.color = "green";
+                } else { // else: keep it at yellow
+                    charel.style.color = "orange";
+                }
+            }
+        } else {
+            charel.style.color = "silver";
         }
     }
 }
