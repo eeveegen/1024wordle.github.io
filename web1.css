@@ -22,3 +22,7 @@ input.letterbox {
   font-size: 14;
   font-weight: bold;
 }
+
+.wordle {
+  padding-bottom: 24px;
+}

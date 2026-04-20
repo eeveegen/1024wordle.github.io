@@ -20,6 +20,11 @@ function start() {
     return false;    
 }
 
+function generate_site() {
+    window.location.href = './level.html';
+    return false;    
+}
+
 function get_idx(elem) {
     parent = elem.parentElement;
 
