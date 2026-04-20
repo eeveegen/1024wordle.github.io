@@ -41,8 +41,3 @@ function clear_page() {
         gamediv.children[n-1].remove();
     }
 }
-
-// function update_page(no_wordles, attempts) {
-//     clear_page();
-//     gen_page(no_wordles, attempts);
-// }

@@ -85,36 +85,29 @@ async function handle_enter(word) {
                 if (uinput == solutions[i]) {
                     active_wordles[i] = false;
                     if(active_wordles.every(val => val === false)) {
-                        console.log("Solved!"); // to add more detailed implementation later
+                        if (level == 4) { // actually final should be 10 but let's keep it at that for testing
+                            window.location.href = "./success.html";
+                        } else {
+                            update_level();
+                        }
                     }
                 }
             }
         }
         active_field++;
+        if (active_field >= word.parentElement.children.length) {
+            window.location.href = "./fail.html";
+        }
 
         wordle_idx = get_idx(word.parentElement);
         if (active_wordles[wordle_idx]) {
             next_word = get_next(word);
             setTimeout(() => {next_word.children[0].focus();}, 0);
         } else {
+            sessionStorage.setItem("level", level);
+            sessionStorage.setItem("solutions", solutions);
             word.children[4].blur();
         }
-        // is currently missing the "what if this is the last word within the wordle"-case
-
-        // if (active_field >= word.parentElement.children.length-1) {
-        //         document.activeElement.blur();
-        //         // sessionStorage.setItem("solution", solution);
-        //         // window.location.href = './fail.html';
-        // } else {
-        //     wordle_idx = get_idx(word.parentElement);
-        //     if (active_wordles[wordle_idx]) {
-        //         next_word = get_next(word);
-        //         setTimeout(() => {next_word.children[0].focus();}, 0);
-        //     } else {
-        //         word.children[4].blur();
-        //     }
-        // }
-        // color_guess(word, uinput);
     }
 }
 

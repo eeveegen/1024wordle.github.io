@@ -1,7 +1,7 @@
 // Defaults and config
 const lvl_atts = [6, 7, 9, 13, 21, 37, 70, 100, 64, 128, 1029];
 
-var level = 1;
+var level = 0;
 var no_wordles = 1;
 var attempts = 6;
 var solutions = [];
@@ -19,7 +19,11 @@ fetch("./valid-wordle-solutions.txt")
 
 async function update_level_params() {
     level++;
-    no_wordles = no_wordles*2;
+    if (level == 1) {
+        no_wordles = 1;
+    } else {
+        no_wordles = no_wordles*2;
+    }
     attempts = lvl_atts[level-1];
     solutions = await generate_solutions(no_wordles);
     active_field = 0;
@@ -45,10 +49,9 @@ async function generate_solutions(no) {
         while(solutions.includes(newsol)) {
             idx = idx + 1;
             newsol = text[idx];
-            // console.log("repeated");
-            // console.log(solutions);
-            // console.log(idx);
         }
+        // debugging info, to be removed later (!!!)
+        console.log(newsol);
         solutions.push(newsol);
     }
 
@@ -59,7 +62,6 @@ async function update_level() {
     await update_level_params();
     clear_page();
     gen_page(no_wordles, attempts);
-
-    // debugel = document.getElementById("debugger");
-    // debugel.innerHTML = solutions;
+    lhead = document.getElementById("level");
+    lhead.innerHTML = "Level " + level.toString();
 }

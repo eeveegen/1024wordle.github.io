@@ -37,7 +37,6 @@ function recolor(word, color) {
 // A = 65
 function get_letter(lval) { // given as a single char
     alphabet = document.getElementById("banner");
-    // idx = (lval.toUpperCase()).charCodeAt();
     idx = lval.toUpperCase().charCodeAt();
     return alphabet.children[idx-65];
 }
