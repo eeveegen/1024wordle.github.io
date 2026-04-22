@@ -79,34 +79,57 @@ async function handle_enter(word) {
             }
         }
     } else {
+        // check solution for each active wordle
         for (var i=0; i<game.children.length; i++) {
             if (active_wordles[i]) {
                 color_guess(game.children[i].children[idx], uinput);
                 if (uinput == solutions[i]) {
                     active_wordles[i] = false;
-                    if(active_wordles.every(val => val === false)) {
-                        if (level == 4) { // actually final should be 10 but let's keep it at that for testing
-                            window.location.href = "./success.html";
-                        } else {
-                            update_level();
+                }
+            }
+        }
+
+        // level update and game solved check
+        if(active_wordles.every(val => val === false)) {
+            if (level == 4) { // actually final should be 10 but let's keep it at that for testing
+                window.location.href = "./success.html";
+            } else {
+                update_level();
+            }
+        } else {
+            // not solved -> check for failure
+            active_field++;
+            if (active_field >= word.parentElement.children.length) {
+                sessionStorage.setItem("level", level);
+                sessionStorage.setItem("solutions", solutions);
+                window.location.href = "./fail.html";
+            }
+
+            // move wordle cursor to next word
+            wordle_idx = get_idx(word.parentElement);
+            if (active_wordles[wordle_idx]) {
+                next_word = get_next(word);
+                setTimeout(() => {next_word.children[0].focus();}, 0);
+            } else {
+                // if word is active: move to next free word (kinda)
+                word.children[4].blur();
+                var refocused = false;
+                for (var i=wordle_idx; i<game.children.length; i++) {
+                    if (active_wordles[i]) {
+                        setTimeout(() => {game.children[i].children[active_field].children[0].focus();}, 0);
+                        refocused = true;
+                        break;
+                    }
+                }
+                if (!refocused) {
+                    for (var i=wordle_idx-1; i>=0; i--) {
+                        if (active_wordles[i]) {
+                            setTimeout(() => {game.children[i].children[active_field].children[0].focus();}, 0);
+                            break;
                         }
                     }
                 }
             }
-        }
-        active_field++;
-        if (active_field >= word.parentElement.children.length) {
-            window.location.href = "./fail.html";
-        }
-
-        wordle_idx = get_idx(word.parentElement);
-        if (active_wordles[wordle_idx]) {
-            next_word = get_next(word);
-            setTimeout(() => {next_word.children[0].focus();}, 0);
-        } else {
-            sessionStorage.setItem("level", level);
-            sessionStorage.setItem("solutions", solutions);
-            word.children[4].blur();
         }
     }
 }
