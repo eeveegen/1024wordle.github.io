@@ -2,9 +2,17 @@
 <html>
     <head>
         <link rel="stylesheet" href="web.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="./app.js"></script>
     </head>
     <body>
+        <div class="header">
+            <i class="fa fa-question-circle" id="readme" onmouseover="show_faq()" onmouseout="hide_faq()"></i>
+            <div class="popup" id="rules">
+                <h2>1024 wordle</h2>
+                <p>In this wordle variation, you need to solve multiple wordles at once. Every time you complete a level, the number of wordles to solve doubles. The final goal is to solve 1024 wordles at once.</p>
+            </div>
+        </div>
         <h1>Welcome!</h1>
         <h2 align="center">Press the button to start the game.</h2>
         <div class="wrapper">

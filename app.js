@@ -230,3 +230,14 @@ function active(word) {
     wordidx = get_idx(word);
     return (wordidx == active_field);
 }
+
+function show_faq() {
+    var readme = document.getElementById("rules");
+    readme.classList.toggle("show");
+
+}
+
+function hide_faq() {
+    var readme = document.getElementById("rules");
+    readme.classList.toggle("show");
+}
