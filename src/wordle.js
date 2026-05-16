@@ -85,13 +85,25 @@ async function handle_enter(word) {
                 color_guess(game.children[i].children[idx], uinput);
                 if (uinput == solutions[i]) {
                     active_wordles[i] = false;
+
+                    if (level > 4) {
+                        // push finished wordle to back (technically front of backlog of finished wordles)
+                        for (var j=game.children.length-1; j>=0; j--) {
+                            if (active_wordles[j]) {
+                                insertAfter(game.children[j], game.children[i]);
+                                active_wordles.push(active_wordles.splice(i, 1)[0]); // we can just append them as we no longer use them, strictly speaking
+                                solutions.push(solutions.splice(i, 1)[0]);
+                                break
+                            }
+                        }
+                    }
                 }
             }
         }
 
         // level update and game solved check
         if(active_wordles.every(val => val === false)) {
-            if (level == 4) { // actually final should be 10 but let's keep it at that for testing
+            if (level == 5) { // actually final should be 10 but let's keep it at that for testing
                 window.location.href = "./success.html";
             } else {
                 update_level();
@@ -104,7 +116,7 @@ async function handle_enter(word) {
                 sessionStorage.setItem("solutions", solutions);
                 window.location.href = "./fail.html";
             }
-
+            
             // move wordle cursor to next word
             wordle_idx = get_idx(word.parentElement);
             if (active_wordles[wordle_idx]) {

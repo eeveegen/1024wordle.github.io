@@ -41,3 +41,8 @@ function clear_page() {
         gamediv.children[n-1].remove();
     }
 }
+
+// stolen from stackoverflow
+function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
