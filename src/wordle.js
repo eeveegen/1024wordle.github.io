@@ -49,6 +49,78 @@ function color_guess(word, uinput) {
     }
 }
 
+function color_alphabet(wordle) {
+    game = wordle.parentElement;
+    alphabet = document.getElementById("banner");
+
+    // reset all previous colors
+    recolor(alphabet, "black");
+
+    //color specifically for focused wordle (given as parameter)
+    for (var i=0; i<active_field; i++) {
+        for (var j=0; j<5; j++) {
+            letter = wordle.children[i].children[j];
+            if (letter.style.backgroundColor == "green") {
+                get_letter(letter.value).style.color = "green";
+                console.log("Actual wordle: coloring letter green");
+                console.log(letter.value);
+            }
+            if (letter.style.backgroundColor == "yellow") {
+                if (get_letter(letter.value).style.color != "green") {
+                    get_letter(letter.value).style.color = "orange";
+                    console.log("Actual wordle: coloring letter yellow");
+                    console.log(letter.value);
+                }
+            }
+        }
+    }
+
+    // get and color letters from other words
+    inactive = [];
+    active_other = [];
+
+    for (var i=0; i<game.children.length; i++) {
+        if (active_wordles[i]) {
+            for (var j=0; j<active_field; j++) {
+                for (var n=0; n<5; n++) {
+                    letter = game.children[i].children[j].children[n];
+                    if (letter.style.backgroundColor == "green" || letter.style.backgroundColor == "yellow") {
+                        if (!active_other.includes(letter.value.toUpperCase())) {
+                            active_other.push(letter.value.toUpperCase());
+                        }
+                    } else {
+                        if (!inactive.includes(letter.value.toUpperCase())) {
+                            inactive.push(letter.value.toUpperCase());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // try lime or LimeGreen 
+    // and magenta or BlueViolet for the other
+
+    console.log(inactive);
+    console.log(active_other);
+
+    for (var i=0; i<alphabet.children.length; i++) {
+        if (active_other.includes(alphabet.children[i].innerHTML)) {
+            if (get_letter(alphabet.children[i].innerHTML).style.color == "black") {
+                get_letter(alphabet.children[i].innerHTML).style.color = "purple";
+                console.log("General: coloring letter purple");
+                console.log(alphabet.children[i].innerHTML);
+            }
+        } else {
+            if (inactive.includes(alphabet.children[i].innerHTML)) {
+                alphabet.children[i].style.color = "gray";
+                console.log("General: coloring letter gray");
+                console.log(alphabet.children[i].innerHTML);
+            }
+        }
+    }
+}
+
 function handle_delete(letter) {
     if (!letter.value) {
         prev_letter = get_previous(letter);
@@ -122,14 +194,18 @@ async function handle_enter(word) {
             if (active_wordles[wordle_idx]) {
                 next_word = get_next(word);
                 setTimeout(() => {next_word.children[0].focus();}, 0);
+                color_alphabet(word.parentElement);
             } else {
-                // if word is active: move to next free word (kinda)
+                // if word is not active: move to next free word (kinda)
                 word.children[4].blur();
                 var refocused = false;
                 for (var i=wordle_idx; i<game.children.length; i++) {
                     if (active_wordles[i]) {
-                        setTimeout(() => {game.children[i].children[active_field].children[0].focus();}, 0);
+                        next_wordle = game.children[i];
+                        setTimeout(() => {next_wordle.children[active_field].children[0].focus();}, 0);
+                        // setTimeout(() => {game.children[i].children[active_field].children[0].focus();}, 0);
                         refocused = true;
+                        color_alphabet(next_wordle);
                         break;
                     }
                 }
@@ -188,6 +264,7 @@ function attach_event_listeners(letter) {
         if (!active_wordles[idx] || !active(this.parentElement)) {
             event.preventDefault();
         }
+        color_alphabet(this.parentElement.parentElement);
     });
 
 }

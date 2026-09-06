@@ -40,6 +40,8 @@ function clear_page() {
     for (n=gamediv.children.length; n>0; n--) {
         gamediv.children[n-1].remove();
     }
+
+    recolor(document.getElementById("banner"), "black");
 }
 
 // stolen from stackoverflow
